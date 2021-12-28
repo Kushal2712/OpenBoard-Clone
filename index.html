@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My OpenBoard</title>
+    <style>
+        .fa-square{
+            font-size: 2rem;
+            margin-right: 20px;
+            
+        }
+        .fa-grip-lines-vertical{
+            font-size: 2rem;
+            margin-right: 20px;
+            
+        }
+        .fa-pencil-alt{
+            font-size: 2rem;
+            margin-right: 20px;
+            
+        }
+
+        div{
+            display: flex;
+            justify-content: space-evenly;
+        }
+       
+        .red{
+            background-color: lightcoral;
+            width:30px;
+            height:30px;
+            border-radius: 50%;
+            justify-content: space-evenly;
+        }
+        .green{
+            background-color: lightgreen;
+            width:30px;
+            height:30px;
+            border-radius: 50%;
+            justify-content: space-evenly;
+            margin-left: 20px;
+        }
+        .blue{
+            background-color: lightblue;
+            width:30px;
+            height:30px;
+            border-radius: 50%;
+            justify-content: space-evenly;
+            margin-left: 20px;
+        }
+        .icon-applet{
+            background-color: rgba(202, 202, 202, 0.705);
+        }
+        .fa-eraser{
+            font-size: 2rem;
+            margin-right: 20px;
+            color: aliceblue;
+            
+        }
+        .size-box{
+            height: 30px;
+            width:100px;
+            border: 2px solid black;
+            align-items: center;
+            display: none;
+        }
+        .size1{
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background-color: aqua;
+        }
+        .size2{
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background-color: aqua;
+        }
+        .size3{
+            height: 29px;
+            width: 29px;
+            border-radius: 50%;
+            background-color: aqua;
+        }
+
+    </style>
+    <link rel="stylesheet" href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css>
+</head>
+<body>
+    
+   <!--<h1>Canvas example</h1>--> 
+   <div class="icon-applet">
+   <i class="fas fa-square" >
+       <div class="size-box">
+           <div class="size1"></div>
+           <div class="size2"></div>
+           <div class="size3"></div>
+
+       </div>
+   </i>
+   <i class="fas fa-grip-lines-vertical">
+    <div class="size-box">
+        <div class="size1"></div>
+        <div class="size2"></div>
+        <div class="size3"></div>
+
+    </div>
+   </i>
+   <i class="fas fa-pencil-alt">
+    <div class="size-box">
+        <div class="size1"></div>
+        <div class="size2"></div>
+        <div class="size3"></div>
+
+    </div>
+   </i>
+   <i class="fas fa-eraser">
+    <div class="size-box">
+        <div class="size1"></div>
+        <div class="size2"></div>
+        <div class="size3"></div>
+
+    </div>
+   </i>
+   <div class="colorcontainer">
+    <div class="red"></div>
+    <div class="blue"></div>
+    <div class="green"></div>
+   </div>
+   
+   </div>
+    <canvas ></canvas>
+    
+    
+</body>
+<!--for injecting js in html-->
+<script>
+    let canvasboard=document.querySelector("canvas");
+    let body=document.querySelector("body");
+    let redcolor=document.querySelector(".red");
+    let bluecolor=document.querySelector(".blue");
+    let greencolor=document.querySelector(".green");
+    let options=document.querySelectorAll(".size-box")
+    canvasboard.height=1248
+    canvasboard.width=1248
+    // this line gives us tool to draw on canvas
+     let tool=canvasboard.getContext("2d");
+     let recttool=document.querySelector(".fa-square");
+     let linetool=document.querySelector(".fa-grip-lines-vertical");
+     let penciltool=document.querySelector(".fa-pencil-alt")
+     let erasertool=document.querySelector(".fa-eraser")
+     let ctool="recttool";
+     
+
+    // tool.fillStyle="green";
+    // tool.fillRect(10,0,200,200);
+    // tool.strokeStyle="red";
+    // tool.strokeRect(30,30,200,200);
+    let boardkatop=canvasboard.getBoundingClientRect();
+    console.log(boardkatop);
+    recttool.addEventListener("click",function(e){
+        if(ctool=="recttool"){
+             options[0].style.display="flex";
+         }else{
+            ctool="recttool"
+            for(let i=0;i<options.length;i++){
+                 options[i].style.display="none"
+             }
+            
+         }
+    
+         
+     })
+     linetool.addEventListener("click",function(){
+         if(ctool=="linetool"){
+             options[1].style.display="flex";
+         }else{
+             for(let i=0;i<options.length;i++){
+                 options[i].style.display="none"
+             }
+            ctool="linetool"
+         }
+     })
+
+     penciltool.addEventListener("click",function(){
+         ctool="pentool";
+         tool.strokeStyle="black"
+     })
+     
+     erasertool.addEventListener("click",function(){
+         ctool="erasetool";
+         tool.strokeStyle="white"
+         
+     })
+    redcolor.addEventListener("click",function(){
+         tool.strokeStyle= "lightcoral";
+     })
+     greencolor.addEventListener("click",function(){
+         tool.strokeStyle= "lightgreen";
+     })
+     bluecolor.addEventListener("click",function(){
+         tool.strokeStyle= "lightblue";
+     })
+    
+    let xi,yi,xf,yf;
+    let drawingMode=false;
+
+    body.addEventListener("mousedown",function(e){
+        
+        xi=e.clientX;
+        yi=e.clientY-boardkatop.top;
+        if(ctool=="pentool" || ctool=="erasetool"){
+            drawingMode=true;
+        tool.beginPath();
+        tool.moveTo(xi,yi);
+        }   
+        
+        
+    })
+    
+
+    body.addEventListener("mouseup",function(e){
+        if(ctool=="pentool" || ctool=="erasetool" ){
+            drawingMode=false;
+        }else if(ctool=="recttool" || ctool=="linetool"){
+        xf=e.clientX;
+        yf=e.clientY-boardkatop.top;
+        let width=xf-xi;
+        let height=yf-yi;
+        if(ctool=="recttool"){
+            tool.strokeRect(xi,yi,width,height)
+        }else if(ctool=="linetool"){
+            tool.beginPath();
+            tool.moveTo(xi,yi);
+            tool.lineTo(xf,yf);
+            tool.stroke(); 
+        }
+        
+    }
+    })
+    body.addEventListener("mousemove",function(e){
+        if(drawingMode==false){
+            return;
+        }
+        xf=e.clientX;
+        yf=e.clientY-boardkatop.top;
+        tool.lineTo(xf,yf);
+        tool.stroke();
+        xi=xf;
+        yi=yf;
+        
+
+    })
+</script>
+</html>
